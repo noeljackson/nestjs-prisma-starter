@@ -13,13 +13,13 @@ import {
 } from '@nestjs/graphql';
 import { Post } from '../../models/post.model';
 import { PostOrder } from '../../models/inputs/post-order.input';
-import { PostConnection } from 'src/models/pagination/post-connection.model';
+import { PostConnection } from '../../models/pagination/post-connection.model';
 import { findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { PubSub } from 'graphql-subscriptions/';
 import { CreatePostInput } from './dto/createPost.input';
-import { UserEntity } from 'src/decorators/user.decorator';
-import { User } from 'src/models/user.model';
-import { GqlAuthGuard } from 'src/guards/gql-auth.guard';
+import { UserEntity } from '../../decorators/user.decorator';
+import { User } from '../../models/user.model';
+import { GqlAuthGuard } from '../../guards/gql-auth.guard';
 import { UseGuards } from '@nestjs/common';
 
 const pubSub = new PubSub();
@@ -106,7 +106,7 @@ export class PostResolver {
     return this.prisma.post.findUnique({ where: { id: id.postId } });
   }
 
-  @ResolveField('author')
+  @ResolveField('author', () => User)
   async author(@Parent() post: Post) {
     return this.prisma.post.findUnique({ where: { id: post.id } }).author();
   }

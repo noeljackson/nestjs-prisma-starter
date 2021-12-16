@@ -12,8 +12,9 @@ import { UseGuards } from '@nestjs/common';
 import { UserEntity } from '../../decorators/user.decorator';
 import { User } from '../../models/user.model';
 import { ChangePasswordInput } from './dto/change-password.input';
-import { UserService } from 'src/services/user.service';
+import { UserService } from '../../services/user.service';
 import { UpdateUserInput } from './dto/update-user.input';
+import { Post } from '../../models/post.model';
 
 @Resolver(() => User)
 @UseGuards(GqlAuthGuard)
@@ -50,7 +51,7 @@ export class UserResolver {
     );
   }
 
-  @ResolveField('posts')
+  @ResolveField('posts', () => [Post])
   posts(@Parent() author: User) {
     return this.prisma.user.findUnique({ where: { id: author.id } }).posts();
   }
